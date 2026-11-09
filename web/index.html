@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Deadlock Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='6' fill='%235b4fe0'/><path d='M8 11V8a4 4 0 0 1 8 0v3' stroke='white' stroke-width='2' fill='none'/><rect x='6' y='11' width='12' height='8' rx='2' fill='white'/></svg>" />
+</head>
+<body>
+<div class="app">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+      <div><div class="brand-title">Deadlock Lab</div><div class="brand-sub">Resource Allocation Dashboard</div></div>
+    </div>
+    <nav class="nav" id="nav">
+      <div class="nav-label">Learn</div>
+      <a href="#overview" data-page="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM8 7h7M8 11h5"/></svg><span>Concepts</span></a>
+      <div class="nav-label">Strategies</div>
+      <a href="#avoidance" data-page="avoidance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg><span>Avoidance</span><em class="tag">Banker's</em></a>
+      <a href="#detection" data-page="detection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span>Detection</span><em class="tag">+ Recovery</em></a>
+      <a href="#prevention" data-page="prevention"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg><span>Prevention</span></a>
+      <div class="nav-label">Evaluate</div>
+      <a href="#tests" data-page="tests"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 3h6M10 3v6L4.5 18.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/></svg><span>Test Cases</span><em class="tag">TC1–6</em></a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="theme-toggle" id="theme">
+        <button data-t="light">Light</button><button data-t="auto">Auto</button><button data-t="dark">Dark</button>
+      </div>
+      <div class="foot-note">OS IA Activity 2 · Deadlock Analysis</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="page" id="page-overview">
+      <div class="hero">
+        <div class="grid-bg"></div>
+        <div class="eyebrow" style="color:#ffffffb0">Operating Systems · Deadlocks</div>
+        <h1>Deadlocks: prevent, avoid, detect, recover.</h1>
+        <p>An interactive lab for the four deadlock-handling strategies. Edit the matrices, submit requests, watch the Banker's safety algorithm run step by step, find cycles in resource-allocation graphs, and compare prevention policies.</p>
+        <div class="chips"><span>Banker's algorithm</span><span>Safety check</span><span>Detection algorithm</span><span>Wait-for graph</span><span>Process termination</span><span>Resource ordering</span></div>
+      </div>
+
+      <h2 style="margin:34px 0 14px">The four necessary conditions</h2>
+      <div class="grid g4">
+        <div class="card cond"><span class="n">01</span><h3>Mutual exclusion</h3><p>At least one resource is non-sharable: only one process can use it at a time.</p></div>
+        <div class="card cond"><span class="n">02</span><h3>Hold and wait</h3><p>A process holds resources while waiting to acquire more.</p></div>
+        <div class="card cond"><span class="n">03</span><h3>No preemption</h3><p>Resources are released only voluntarily by the process holding them.</p></div>
+        <div class="card cond"><span class="n">04</span><h3>Circular wait</h3><p>P0 waits for P1, P1 for P2, …, Pn for P0. A closed chain of waits.</p></div>
+      </div>
+      <p class="muted small" style="margin-top:10px">A deadlock can occur only if <b>all four</b> hold simultaneously. Remove any one and deadlock is impossible.</p>
+
+      <h2 style="margin:34px 0 14px">Four handling strategies</h2>
+      <div class="grid g4">
+        <a class="card strategy" href="#prevention"><div class="ic" style="background:var(--warn)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg></div>
+          <h3>Prevention</h3><p>Design the policy so one condition can <b>never</b> hold: global resource ordering, or request everything at once.</p><div class="go">Open simulator →</div></a>
+        <a class="card strategy" href="#avoidance"><div class="ic" style="background:var(--safe)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg></div>
+          <h3>Avoidance</h3><p>Know each process's <b>Max</b>. Before granting a request, pretend to allocate and run the safety algorithm. Grant only if the result is safe.</p><div class="go">Open Banker's →</div></a>
+        <a class="card strategy" href="#detection"><div class="ic" style="background:var(--info)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+          <h3>Detection</h3><p>Let it happen, then find it: a wait-for cycle for single-instance resources, the detection algorithm for multiple instances.</p><div class="go">Open detector →</div></a>
+        <a class="card strategy" href="#detection"><div class="ic" style="background:var(--deadlock)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg></div>
+          <h3>Recovery</h3><p>Break a detected deadlock: <b>terminate</b> a victim process so its resources return to Available.</p><div class="go">Try recovery →</div></a>
+      </div>
+
+      <div class="grid g2" style="margin-top:34px">
+        <div class="card">
+          <div class="card-head"><h2>Unsafe ≠ Deadlocked</h2></div>
+          <svg viewBox="0 0 420 250" class="rag" role="img" aria-label="Venn diagram: deadlocked states are a subset of unsafe states; safe states are separate">
+            <rect x="6" y="6" width="408" height="238" rx="18" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="22" y="32" style="font:600 12px var(--sans);fill:var(--muted)">All states</text>
+            <ellipse cx="120" cy="140" rx="92" ry="78" fill="color-mix(in srgb, var(--safe) 18%, transparent)" stroke="var(--safe)" stroke-width="1.5"/>
+            <text x="120" y="135" text-anchor="middle" style="font:800 14px var(--sans);fill:var(--safe)">SAFE</text>
+            <text x="120" y="155" text-anchor="middle" style="font:500 11px var(--sans);fill:var(--muted)">a safe sequence exists</text>
+            <ellipse cx="300" cy="138" rx="104" ry="90" fill="color-mix(in srgb, var(--warn) 16%, transparent)" stroke="var(--warn)" stroke-width="1.5"/>
+            <text x="300" y="72" text-anchor="middle" style="font:800 14px var(--sans);fill:var(--warn)">UNSAFE</text>
+            <text x="300" y="90" text-anchor="middle" style="font:500 11px var(--sans);fill:var(--muted)">deadlock possible</text>
+            <ellipse cx="300" cy="160" rx="58" ry="44" fill="color-mix(in srgb, var(--deadlock) 25%, transparent)" stroke="var(--deadlock)" stroke-width="1.5"/>
+            <text x="300" y="158" text-anchor="middle" style="font:800 12px var(--sans);fill:var(--deadlock)">DEADLOCKED</text>
+            <text x="300" y="175" text-anchor="middle" style="font:500 10.5px var(--sans);fill:var(--muted)">actually blocked</text>
+          </svg>
+          <p class="muted small" style="margin-top:12px"><b>Unsafe</b> only means there is no guaranteed order <i>if every process demands its full Max</i>. Processes may release resources early, so the system can still run fine. Every deadlocked state is unsafe, but <b>not every unsafe state is deadlocked</b>.</p>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Avoidance vs Detection</h2></div>
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr><th></th><th>Banker's (avoidance)</th><th>Detection</th></tr></thead>
+            <tbody>
+              <tr><td class="muted">Runs</td><td>before every grant</td><td>periodically / on suspicion</td></tr>
+              <tr><td class="muted">Uses</td><td><b>Need = Max − Alloc</b><br><span class="muted small">future worst case</span></td><td><b>Request</b><br><span class="muted small">what is waited for now</span></td></tr>
+              <tr><td class="muted">Asks</td><td>"If I grant this, can everyone still finish?"</td><td>"Is anyone stuck forever right now?"</td></tr>
+              <tr><td class="muted">Output</td><td>grant · wait · deny</td><td>deadlocked set → recovery</td></tr>
+              <tr><td class="muted">Finds existing deadlock?</td><td><span class="pill c-danger">No</span></td><td><span class="pill c-safe">Yes</span></td></tr>
+            </tbody></table></div>
+          <div class="callout" style="margin-top:14px"><b>Graph cycles:</b> with single-instance resources, a cycle ⇔ deadlock. With multiple instances a cycle is <i>necessary but not sufficient</i>; run the detection algorithm.</div>
+        </div>
+      </div>
+
+      <h2 style="margin:34px 0 14px">Status vocabulary</h2>
+      <div class="card"><div class="row" id="legend"></div>
+        <p class="muted small" style="margin-top:12px">Each status is distinct. A request above <i>Available</i> gets <b>WAIT</b>, not INVALID. A request that would make the state unsafe gets <b>DENIED</b>, and the state is not labelled deadlocked.</p></div>
+    </section>
+
+    <!-- ================= AVOIDANCE ================= -->
+    <section class="page" id="page-avoidance">
+      <div class="page-head">
+        <div><div class="eyebrow">Deadlock avoidance</div><h1>Banker's Algorithm</h1>
+          <p class="lede">Configure the system, inspect the computed Need matrix, run the safety algorithm, and submit resource requests.</p></div>
+      </div>
+      <div class="stack" id="avoid-root"></div>
+    </section>
+
+    <!-- ================= DETECTION ================= -->
+    <section class="page" id="page-detection">
+      <div class="page-head">
+        <div><div class="eyebrow">Deadlock detection &amp; recovery</div><h1>Detect &amp; Recover</h1>
+          <p class="lede">A separate function from Banker's. It looks at the <b>current Request</b> matrix (what processes are blocked on now) to find processes that can never proceed.</p></div>
+      </div>
+      <div class="stack" id="detect-root"></div>
+    </section>
+
+    <!-- ================= PREVENTION ================= -->
+    <section class="page" id="page-prevention">
+      <div class="page-head">
+        <div><div class="eyebrow">Deadlock prevention</div><h1>Break a Necessary Condition</h1>
+          <p class="lede">Three jobs share three single-instance devices. Run the same workload under three allocation policies and compare.</p></div>
+      </div>
+      <div class="stack" id="prevent-root"></div>
+    </section>
+
+    <!-- ================= TESTS ================= -->
+    <section class="page" id="page-tests">
+      <div class="page-head">
+        <div><div class="eyebrow">Analytical evaluation</div><h1>Test Cases TC1–TC6</h1>
+          <p class="lede">Each row is computed live by running the dashboard's own algorithms on the group's scenarios.</p></div>
+        <div class="row"><button class="btn" id="copy-md">Copy as Markdown</button><button class="btn primary" id="rerun">Re-run all</button></div>
+      </div>
+      <div class="stack" id="tests-root"></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="js/core.js"></script>
+<script src="js/scenarios.js"></script>
+<script src="js/testcases.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
